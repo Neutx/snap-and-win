@@ -15,7 +15,7 @@ export function HeroSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-              Share Your Style, <span className="text-primary">Get {couponValue} Off</span>
+              Share Your Setup, <span className="text-primary">Get {couponValue} Off</span>
             </h1>
             <p className="text-xl text-muted-foreground">
               Purchase from {brandName}, post on Instagram with #

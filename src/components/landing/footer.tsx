@@ -16,7 +16,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">{brandName}</h3>
             <p className="text-muted-foreground mb-4">
-              Share your style on Instagram and get rewarded with exclusive discounts.
+              Share your Kreo-Setup on Instagram and get rewarded with exclusive discounts.
             </p>
             <div className="flex space-x-4">
               <Link
