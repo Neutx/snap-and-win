@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -31,7 +31,7 @@ import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -40,8 +40,16 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { status } = useSession();
   const callbackUrl = searchParams.get("callbackUrl") || "/admin";
   const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || "Your Brand";
+  
+  // If already authenticated, redirect to admin dashboard
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/admin");
+    }
+  }, [status, router]);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -65,6 +73,7 @@ export default function LoginPage() {
         toast.error("Login failed", {
           description: "Invalid email or password. Please try again.",
         });
+        setIsLoading(false);
         return;
       }
       
@@ -79,9 +88,16 @@ export default function LoginPage() {
       toast.error("Something went wrong", {
         description: "Please try again later.",
       });
-    } finally {
       setIsLoading(false);
     }
+  }
+
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-muted/30">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (

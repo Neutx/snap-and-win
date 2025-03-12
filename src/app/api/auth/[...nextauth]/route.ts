@@ -62,6 +62,7 @@ const handler = NextAuth({
       return session;
     },
   },
+  debug: true, // Enable debug mode to see more information
 });
 
 export { handler as GET, handler as POST }; 

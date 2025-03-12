@@ -21,8 +21,9 @@ export default function AdminLayout({
     
     setIsLoading(false);
     
-    if (status === "unauthenticated") {
-      router.push(`/admin/login?callbackUrl=${pathname}`);
+    // Only redirect to login if not on the login page already
+    if (status === "unauthenticated" && !pathname.includes('/admin/login')) {
+      router.push(`/admin/login?callbackUrl=${encodeURIComponent(pathname)}`);
     }
   }, [status, router, pathname]);
 
@@ -34,10 +35,17 @@ export default function AdminLayout({
     );
   }
 
-  if (!session) {
+  // If not authenticated and not on login page, don't render anything
+  if (status === "unauthenticated" && !pathname.includes('/admin/login')) {
     return null;
   }
 
+  // Render the login page directly if that's where we are
+  if (pathname.includes('/admin/login')) {
+    return children;
+  }
+
+  // Otherwise render the admin layout with sidebar
   return (
     <div className="flex min-h-screen bg-muted/30">
       <AdminSidebar />
